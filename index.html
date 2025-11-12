@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <link rel="icon" type="image/svg+xml" href="https://clayc03.github.io/rock-paper-scissors/assets/images/game-image.png">
+   <title>Rock Paper Scissors</title>
+   <style>
+     * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+}
+
+.game-box {
+    width: 400px;
+    max-height:600px;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+    color: #fff;
+}
+
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.subtitle {
+    margin: 20px 0px 40px 0px;
+    opacity: 0.8;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    margin: 40px 0px ;
+}
+
+.btn {
+    background: rgba(143, 143, 143, 0.395);
+    border: none;
+    font-size: 2rem;
+    padding: 12px 18px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 15px #000000;
+}
+#resetbtn {
+   background-color: #f44336;
+   color: white;
+   margin: 30px;
+   padding:8px;
+   font-size: larger;
+   border-radius: 20%;
+   cursor: pointer;
+   transition: 0.5s ease-in-out;
+}
+#resetbtn:hover{
+  background-color: #da190b;
+  color: #fff;
+  transform: scale(1.5);
+  box-shadow: 0px 0px 15px #000000;
+}
+.userChoice{
+    margin-top: 40px;
+}
+ .score {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px ;
+    font-size: 1.1rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+
+.result {
+    margin-top: 20px;
+}
+
+
+
+   </style>
+</head>
+<body>
+
+    <div class="game-box">
+        <h1>Rock • Paper • Scissors</h1>
+        <p class="subtitle">Welcome to the Rock • Paper • Scissors game!
+Choose your option below to play against the computer.!</p>
+
+        <div class="buttons">
+
+
+            <button class="btn" onClick=" 
+          computerChoice= generateComputerChoice () ;
+          game (computerChoice,'Rock');
+            showResult(computerChoice,'Rock',result);
+          "> 🪨</button> 
+
+         <button class="btn" onClick=" 
+           computerChoice= generateComputerChoice () ;
+           game (computerChoice,'Paper');
+          showResult(computerChoice,'Paper',result);
+           ">📄</button>
+
+        <button class="btn" onClick=" 
+           computerChoice= generateComputerChoice () ;
+           game (computerChoice,'Scissor');
+           showResult(computerChoice,'Scissor',result);
+            ">✂️</button>
+          </div>
+          <h4 class="userChoice"></h4>
+            <h4 class="computerChoice"></h4>
+            <h4 class="result"></h4>
+            <h2 class="score"></h2>
+
+           <button id="resetbtn" onClick="
+           localStorage.removeItem('score');
+          resetScore();        
+          showResult('','','','');
+            ">Reset Game</button>
+            <!-- <button class="btn" data-choice="rock">🪨</button>
+            <button class="btn" data-choice="paper">📄</button>
+            <button class="btn" data-choice="scissors">✂️</button>
+        </div> -->
+
+        <!-- <div class="score-board">
+            <div>
+                <h3>You</h3>
+                <p id="user-score">0</p>
+            </div>
+            <div>
+                <h3>Computer</h3>
+                <p id="computer-score">0</p>
+            </div>
+        </div> -->
+
+        <!-- <div class="result">
+            <p id="user-choice">You picked: -</p>
+            <p id="computer-choice">Computer picked: -</p>
+            <h2 id="winner">Winner: -</h2>
+        </div>
+    </div> -->
+
+
+    <script>
+         let scorestr = localStorage.getItem('score');
+        let score;
+        function resetScore(scoreStr) {
+           score = scoreStr ? JSON.parse(scoreStr) :
+            { wins : 0, losses : 0,  ties : 0
+                };
+        }
+        score = JSON.parse(scorestr) ||  { wins : 0, losses : 0,  ties : 0
+            };
+
+        function generateComputerChoice() {
+            let randomNumber = Math.random()*3;
+            if( randomNumber > 0 && randomNumber <= 1){
+                return 'Rock'; 
+            }
+            else if( randomNumber > 1 && randomNumber <= 2){
+                return 'Paper';
+            }else {
+                return 'Scissor'; 
+            }
+         }
+         let computerChoice= '';
+         let userChoice= '';
+         let result;
+        function game (computerChoice, userChoice){
+            
+            if (computerChoice === userChoice ){
+                result = `It's a tie`;
+                score.ties ++;
+            }else if (
+                (computerChoice === 'Rock' && userChoice === 'Paper') || (computerChoice === 'Paper' && userChoice === 'Scissor') || (computerChoice === 'Scissor' && userChoice === 'Rock')
+            ) {
+                result = `You win`;
+                score.losses ++;
+            } else {
+                result = `Computer wins`;
+                score.wins ++;
+            }
+            return result;
+        }
+        function showResult(computerChoice, userChoice , result){
+            localStorage.setItem('score', JSON.stringify(score));
+document.querySelector('.userChoice').innerText = `You chose:- ${userChoice}`;
+document.querySelector('.computerChoice').innerText = `Computer chose:- ${computerChoice}`;
+document.querySelector('.result').innerText =`Result :- ${ result}`;
+document.querySelector('.score').innerText = ` score :- ${score.wins} Wins, ${score.losses} Losses, ${score.ties} Ties`;  
+        }
+    </script>
+   </body>
+</html>
